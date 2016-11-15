@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		450140DA1DDABED4004A1D7B /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 450140D91DDABED4004A1D7B /* Cartfile */; };
 		453364031CAE410600319085 /* BNBannerScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 453364021CAE410600319085 /* BNBannerScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		453364121CAE415A00319085 /* BannerScrollView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 453364111CAE415A00319085 /* BannerScrollView.storyboard */; };
 		453364141CAE416100319085 /* BNBannerScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453364131CAE416100319085 /* BNBannerScrollView.swift */; };
@@ -52,6 +53,7 @@
 
 /* Begin PBXFileReference section */
 		23B1731A6495CFC761A7E2FE /* Pods_BNBannerScrollView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BNBannerScrollView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		450140D91DDABED4004A1D7B /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		453363FF1CAE410600319085 /* BNBannerScrollView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BNBannerScrollView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		453364021CAE410600319085 /* BNBannerScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BNBannerScrollView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		453364041CAE410600319085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -108,11 +110,20 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		450140DB1DDABEDB004A1D7B /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				450140D91DDABED4004A1D7B /* Cartfile */,
+			);
+			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		453363F51CAE410600319085 = {
 			isa = PBXGroup;
 			children = (
 				453364011CAE410600319085 /* BNBannerScrollView */,
 				45921DF21DDAAECC00067030 /* Example */,
+				450140DB1DDABEDB004A1D7B /* SupportingFiles */,
 				453364001CAE410600319085 /* Products */,
 				34087B7749599E9E788F04E1 /* Pods */,
 				99E12D48DCC28CA3A15340F4 /* Frameworks */,
@@ -269,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				450140DA1DDABED4004A1D7B /* Cartfile in Resources */,
 				45ED8FD31D911A3600F4AFDA /* BNBannerScrollView.podspec in Resources */,
 				453364121CAE415A00319085 /* BannerScrollView.storyboard in Resources */,
 			);

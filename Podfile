@@ -5,7 +5,6 @@ def common
     pod 'SDWebImage', '~>3.8.0'
 end
 
-
 target 'BNBannerScrollView' do
     common
 end
