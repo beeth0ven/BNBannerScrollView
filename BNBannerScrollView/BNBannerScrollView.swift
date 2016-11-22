@@ -176,10 +176,11 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     // MARK: Update UI
     
     fileprivate func reloadData() {
-        startTimerIfNeeded()
+        startTimer()
         reloadImageViews()
         currentIndex = 0
         pageControl.numberOfPages = banners.count
+        pageControl.isHidden = banners.count < 2
         layoutSubviews() // Force Update Size in Cell
     }
     
@@ -208,20 +209,19 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     
     // MARK: IBAction
     
-    fileprivate var timerStarted = false
+    fileprivate var timer: Timer!
     
-    fileprivate func startTimerIfNeeded() {
-        if !timerStarted {
-            timerStarted = true
-            startTimer()
+    fileprivate func startTimer() {
+        if timer == nil {
+            timer = Timer.scheduledTimer(5,
+                            duration: Double.infinity,
+                            repeatClosure: { [weak self] _ in self?.nextPage() })
         }
     }
     
-    fileprivate func startTimer() {
-        Timer.scheduledTimer(5,
-            duration: Double.infinity,
-            repeatClosure: { [weak self] _ in self?.nextPage() }
-        )
+    fileprivate func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
     
     fileprivate func nextPage() {
@@ -251,6 +251,14 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
         } else {
             updateWithCurrentIndex(currentIndex)
         }
+    }
+    
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        stopTimer()
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        startTimer()
     }
     
     fileprivate enum Mode {
