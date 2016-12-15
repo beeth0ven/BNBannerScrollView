@@ -79,10 +79,24 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     open var banners = [BannerType]() { didSet { reloadData() } }
     
     open var didSelectBanner: ((BannerType) -> Void)?
+
+    open  var currentIndex = 0 {
+        didSet {
+            guard oldValue != currentIndex else { return }
+            didSetCurrentIndex?(currentIndex)
+        }
+    }
+
+    open var didSetCurrentIndex: ((Int) -> Void)?
     
+    @IBInspectable
+    open var isCycled: Bool = true
+    
+    @IBInspectable
+    open var isAutoPlay: Bool = true
+
     // MARK: Properties
     
-    fileprivate var currentIndex = 0
     
     fileprivate var currentBanner: BannerType? {
         if banners.isEmpty { return nil }
@@ -91,7 +105,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     }
     
     fileprivate var mode: Mode {
-        return self.banners.count < 2 ? .nomal : .cycle
+        return (isCycled && self.banners.count > 1) ? .cycle : .nomal
     }
     
     fileprivate var realBanners: [BannerType] {
@@ -117,7 +131,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
         set {
             switch mode {
             case .nomal:
-                currentIndex = 0
+                currentIndex = newValue
             case .cycle:
                 currentIndex = newValue - 1
             }
@@ -212,6 +226,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     fileprivate var timer: Timer!
     
     fileprivate func startTimer() {
+        guard isAutoPlay else { return }
         if timer == nil {
             timer = Timer.scheduledTimer(5,
                             duration: Double.infinity,
@@ -244,11 +259,12 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         realIndex = Int(scrollView.contentOffset.x / bounds.width)
-        if currentIndex == banners.endIndex {
+        switch currentIndex {
+        case banners.endIndex:
             updateWithCurrentIndex(currentIndex - banners.count)
-        } else if currentIndex == -1 {
+        case -1:
             updateWithCurrentIndex(currentIndex + banners.count)
-        } else {
+        default:
             updateWithCurrentIndex(currentIndex)
         }
     }
