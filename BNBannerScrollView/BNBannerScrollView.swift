@@ -167,7 +167,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     fileprivate func reloadImageViews() {
         contentView.subviews.removeFromSuperview()
         for banner in realBanners {
-            let button = UIButton(type: .custom)
+            let button = UIButton(type: .system)
             button.isUserInteractionEnabled = true
             button.addTarget(self, action: #selector(buttonTaped(_:)), for: .touchUpInside)
             banner.configureButton(button)
