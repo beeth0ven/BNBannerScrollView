@@ -161,6 +161,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
         currentIndex = 0
         pageControl.numberOfPages = banners.count
         pageControl.isHidden = banners.count < 2
+        realBanners.count < 2 ? bottomMaskView.isHidden = true : ()
         layoutSubviews() // Force Update Size in Cell
     }
     
