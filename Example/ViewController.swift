@@ -8,7 +8,7 @@
 
 import UIKit
 import BNBannerScrollView
-
+import SDWebImage
 
 class ViewController: UIViewController {
     
@@ -19,17 +19,24 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bannerScrollView.didSelectBanner = { banner in
-            let course = banner as! Course
-            print("pushCourseViewController with id: \(course.id)")
-        }
-        
         courses = [
             Course(id: 0, name: "扬琴艺术", photo: photo1),
             Course(id: 1, name: "演奏技巧", photo: photo2)
         ]
+
+        let banners: [BNBannerScrollView.Banner] = courses.map { course in
+            (configureButton: { button in
+                button.sd_setBackgroundImage(with: course.photo, for: .normal, placeholderImage: nil)
+            },
+             configureLabel: { label in
+                label.text = course.name
+            },
+             didSelectBanner: {
+                print("pushCourseViewController with id: \(course.id)")
+            })
+        }
         
-        bannerScrollView.banners = courses.map { $0 as BannerType }
+        bannerScrollView.banners = banners
     }
     
 }

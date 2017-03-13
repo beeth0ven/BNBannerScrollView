@@ -7,42 +7,6 @@
 //
 
 import UIKit
-import SDWebImage
-/**
- The type should used as banner should comform this protocol.
- For exmaple：
- ```swift
-struct Course {
-    var id: Int
-    var name: String
-    var photo: NSURL
-}
-
-extension Course: BannerType {
-    var bannerTitle: String {
-        return name
-    }
-    
-    var bannerPhoto: NSURL {
-        return photo
-    }
-}
- 
- ```
- Course can be represented as banner, course.name shows as bannerTitle, and course.name shows as bannerPhoto.
- */
-public protocol BannerType {
-    var bannerTitle: String? { get }
-    var bannerPhoto: URL? { get }
-    var bannerPlaceholderImage: UIImage? { get }
-    var bannerCenterImage: UIImage? { get }
-}
-
-public extension BannerType {
-    var bannerTitle: String? { return nil }
-    var bannerPlaceholderImage: UIImage? { return nil }
-    var bannerCenterImage: UIImage? { return nil }
-}
 
 /**
  BNBannerScrollView wrapped banners with easy to use api.
@@ -75,10 +39,12 @@ class ViewController: UIViewController {
 open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     
     // MARK: Public
+    public typealias ConfigureButton = (UIButton) -> Void
+    public typealias ConfigureLabel = (UILabel) -> Void
+    public typealias DidSelectBanner = (() -> Void)?
+    public typealias Banner = (configureButton: ConfigureButton, configureLabel: ConfigureLabel, didSelectBanner: DidSelectBanner)
+    public var banners = [Banner]() { didSet { reloadData() } }
     
-    open var banners = [BannerType]() { didSet { reloadData() } }
-    
-    open var didSelectBanner: ((BannerType) -> Void)?
 
     open  var currentIndex = 0 {
         didSet {
@@ -98,7 +64,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     // MARK: Properties
     
     
-    fileprivate var currentBanner: BannerType? {
+    fileprivate var currentBanner: Banner? {
         if banners.isEmpty { return nil }
         let index = currentIndex % banners.count
         return banners[index]
@@ -108,7 +74,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
         return (isCycled && self.banners.count > 1) ? .cycle : .nomal
     }
     
-    fileprivate var realBanners: [BannerType] {
+    fileprivate var realBanners: [Banner] {
         switch mode {
         case .nomal:
             return self.banners
@@ -201,14 +167,10 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     fileprivate func reloadImageViews() {
         contentView.subviews.removeFromSuperview()
         for banner in realBanners {
-            let buttonType: UIButtonType = banner.bannerCenterImage == nil ? .custom : .system
-            let button = UIButton(type: buttonType)
-            button.tintColor = tintColor
+            let button = UIButton(type: .custom)
             button.isUserInteractionEnabled = true
-            button.contentMode = .scaleToFill
-            button.setImage(banner.bannerCenterImage, for: .normal)
-            button.sd_setBackgroundImage(with: banner.bannerPhoto, for: .normal, placeholderImage: banner.bannerPlaceholderImage)
             button.addTarget(self, action: #selector(buttonTaped(_:)), for: .touchUpInside)
+            banner.configureButton(button)
             contentView.addSubview(button)
         }
     }
@@ -216,7 +178,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     fileprivate func updateWithCurrentIndex(_ index: Int) {
         currentIndex = index
         pageControl.currentPage = currentIndex
-        titleLabel.text = currentBanner?.bannerTitle
+        currentBanner?.configureLabel(titleLabel)
         let offset = CGPoint(x: CGFloat(realIndex) * bounds.width, y: 0)
         scrollView.setContentOffset(offset, animated: false)
     }
@@ -254,7 +216,7 @@ open class BNBannerScrollView: UIView, UIScrollViewDelegate {
     
     func buttonTaped(_ sender: UIButton) {
         guard let currentBanner = currentBanner else { return }
-        didSelectBanner?(currentBanner)
+        currentBanner.didSelectBanner?()
     }
     
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

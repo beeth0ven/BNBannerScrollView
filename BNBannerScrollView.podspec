@@ -14,5 +14,5 @@ Pod::Spec.new do |s|
     s.source_files = "BNBannerScrollView/*.swift"
     s.resources = "BNBannerScrollView/*.{storyboard}"
 
-    s.dependency 'SDWebImage', '~>3.8.0'
+#    s.dependency 'SDWebImage', '~>3.8.0'
 end
